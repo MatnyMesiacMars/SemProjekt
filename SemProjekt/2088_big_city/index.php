@@ -1,37 +1,14 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Big City - Responsive HTML CSS Template</title>
-<!--
+<?php
+$file_path = "Header a footer/header.php";
+if (!include($file_path) ) {
+    echo "Failed to include $file_path";
+}
+?>
+<?php require "parts/header.php"; ?>
 
-Template 2088 Big City
-
-http://www.tooplate.com/view/2088-big-city
-
--->
-    <!-- load stylesheets -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">  
-    <!-- Google web font "Open Sans" -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">                                      
-    <!-- Bootstrap style -->
-    <link rel="stylesheet" href="css/hero-slider-style.css">                              
-    <!-- Hero slider style (https://codyhouse.co/gem/hero-slider/) -->
-    <link rel="stylesheet" href="css/magnific-popup.css">                                 
-    <!-- Magnific popup style (http://dimsemenov.com/plugins/magnific-popup/) -->
-    <link rel="stylesheet" href="css/tooplate-style.css">                                   
-    <!-- Tooplate style -->
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-          <![endif]-->
-</head>
 
     <body>
 
@@ -345,11 +322,13 @@ http://www.tooplate.com/view/2088-big-city
                     </div> <!-- .cd-full-width -->
                 </li>
             </ul> <!-- .cd-hero-slider -->
-            
-            <footer class="tm-footer">            
-                <p class="tm-copyright-text pull-xs-right">Copyright &copy; <span class="tm-current-year">2017</span> Your Company            
-                | Design: <a rel="nofollow" href="http://www.tooplate.com/view/2088-big-city" class="tm-footer-link" target="_parent">Big City</a></p>
-            </footer>                    
+            <?php
+            $file_path = "Header a footer/footer.php";
+            if (!include($file_path) ) {
+                echo "Failed to include $file_path";
+            }
+            ?>
+
         </div> <!-- .cd-hero -->        
 
         <!-- Preloader, https://ihatetomatoes.net/create-custom-preloading-screen/ -->
