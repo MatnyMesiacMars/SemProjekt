@@ -2,12 +2,66 @@
 <html>
 
 <?php
-$file_path = "Header a footer/header.php";
-if (!include($file_path) ) {
-    echo "Failed to include $file_path";
+$filePath = "Header a footer/header.php";
+if (!include($filePath)) {
+    echo "Failed to include $filePath";
+}
+
+require_once __DIR__ . '/classes/Database.php';
+require_once __DIR__ . '/classes/CommentRepository.php';
+
+$config = require __DIR__ . '/config.php';
+$repository = null;
+$comments = [];
+$editComment = null;
+$flashMessage = '';
+$errorMessage = '';
+
+try {
+    $database = new Database($config['db']);
+    $repository = new CommentRepository($database->getConnection());
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $action = $_POST['action'] ?? '';
+        $author = trim($_POST['author'] ?? '');
+        $question = trim($_POST['question'] ?? '');
+        $answer = trim($_POST['answer'] ?? '');
+        $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+
+        if (in_array($action, ['create', 'update'], true)) {
+            if ($author === '' || $question === '' || $answer === '') {
+                $errorMessage = 'Please fill in author, question and answer.';
+            } else {
+                if ($action === 'create') {
+                    $repository->create($author, $question, $answer);
+                    $flashMessage = 'Comment was created.';
+                }
+
+                if ($action === 'update' && $id > 0) {
+                    $repository->update($id, $author, $question, $answer);
+                    $flashMessage = 'Comment was updated.';
+                }
+            }
+        }
+
+        if ($action === 'delete' && $id > 0) {
+            $repository->delete($id);
+            $flashMessage = 'Comment was deleted.';
+        }
+    }
+
+    if ($repository !== null) {
+        $comments = $repository->getAll();
+    }
+
+    $editId = isset($_GET['edit']) ? (int) $_GET['edit'] : 0;
+    if ($repository !== null && $editId > 0) {
+        $editComment = $repository->findById($editId);
+    }
+} catch (Throwable $exception) {
+    $errorMessage = 'Database error: ' . $exception->getMessage();
 }
 ?>
-<?php require "parts/header.php"; ?>
 
 
     <body>
@@ -300,19 +354,52 @@ if (!include($file_path) ) {
                                             </div>
 
                                             <div class="text-xs-left tm-textbox tm-2-col-textbox-2 tm-textbox-padding tm-textbox-padding-contact">
-                                                <!-- contact form -->
-                                                <form action="index.html" method="post" class="tm-contact-form">
+                                                <?php if ($flashMessage !== ''): ?>
+                                                    <p class="tm-text" style="color:#80ff80; margin-bottom:15px;"><?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?></p>
+                                                <?php endif; ?>
+                                                <?php if ($errorMessage !== ''): ?>
+                                                    <p class="tm-text" style="color:#ff9898; margin-bottom:15px;"><?php echo htmlspecialchars($errorMessage, ENT_QUOTES, 'UTF-8'); ?></p>
+                                                <?php endif; ?>
+
+                                                <form action="index.php#0" method="post" class="tm-contact-form">
+                                                    <input type="hidden" name="action" value="<?php echo $editComment ? 'update' : 'create'; ?>">
+                                                    <?php if ($editComment): ?>
+                                                        <input type="hidden" name="id" value="<?php echo (int) $editComment['id']; ?>">
+                                                    <?php endif; ?>
                                                     <div class="form-group">
-                                                        <input type="text" id="contact_name" name="contact_name" class="form-control" placeholder="Name"  required/>
+                                                        <input type="text" id="author" name="author" class="form-control" placeholder="Author" value="<?php echo htmlspecialchars($editComment['author'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required/>
                                                     </div>                                                                                                            
                                                     <div class="form-group">
-                                                        <input type="email" id="contact_email" name="contact_email" class="form-control" placeholder="Email"  required/>
+                                                        <textarea id="question" name="question" class="form-control" rows="3" placeholder="Question" required><?php echo htmlspecialchars($editComment['question'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
                                                     </div>                                                    
                                                     <div class="form-group">
-                                                        <textarea id="contact_message" name="contact_message" class="form-control" rows="5" placeholder="Your message" required></textarea>
+                                                        <textarea id="answer" name="answer" class="form-control" rows="4" placeholder="Answer" required><?php echo htmlspecialchars($editComment['answer'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
                                                     </div>
-                                                    <button type="submit" class="tm-submit-btn">Send</button>                                                
+                                                    <button type="submit" class="tm-submit-btn"><?php echo $editComment ? 'Update' : 'Create'; ?></button>
+                                                    <?php if ($editComment): ?>
+                                                        <a href="index.php#0" class="tm-submit-btn" style="display:inline-block;text-decoration:none;margin-left:8px;">Cancel</a>
+                                                    <?php endif; ?>
                                                 </form> 
+
+                                                <hr>
+                                                <h3 class="tm-text-title tm-text-title-small">Q&A Comments</h3>
+                                                <?php if (count($comments) === 0): ?>
+                                                    <p class="tm-text">No comments yet.</p>
+                                                <?php else: ?>
+                                                    <?php foreach ($comments as $comment): ?>
+                                                        <div style="border:1px solid #4d648d; padding:12px; margin-bottom:10px;">
+                                                            <p class="tm-text" style="margin:0 0 8px;"><strong><?php echo htmlspecialchars($comment['author'], ENT_QUOTES, 'UTF-8'); ?></strong> <small>(<?php echo htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8'); ?>)</small></p>
+                                                            <p class="tm-text" style="margin:0 0 6px;"><strong>Q:</strong> <?php echo nl2br(htmlspecialchars($comment['question'], ENT_QUOTES, 'UTF-8')); ?></p>
+                                                            <p class="tm-text" style="margin:0 0 10px;"><strong>A:</strong> <?php echo nl2br(htmlspecialchars($comment['answer'], ENT_QUOTES, 'UTF-8')); ?></p>
+                                                            <a href="index.php?edit=<?php echo (int) $comment['id']; ?>#0" class="tm-submit-btn" style="display:inline-block;text-decoration:none;">Edit</a>
+                                                            <form action="index.php#0" method="post" style="display:inline-block; margin-left:8px;">
+                                                                <input type="hidden" name="action" value="delete">
+                                                                <input type="hidden" name="id" value="<?php echo (int) $comment['id']; ?>">
+                                                                <button type="submit" class="tm-submit-btn" onclick="return confirm('Delete this comment?');">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -323,9 +410,9 @@ if (!include($file_path) ) {
                 </li>
             </ul> <!-- .cd-hero-slider -->
             <?php
-            $file_path = "Header a footer/footer.php";
-            if (!include($file_path) ) {
-                echo "Failed to include $file_path";
+            $filePath = "Header a footer/footer.php";
+            if (!include($filePath)) {
+                echo "Failed to include $filePath";
             }
             ?>
 
