@@ -1,41 +1,25 @@
-<?php
-session_start();
-
-require_once 'auth.php';
-require_once 'classes/Database.php';
-require_once 'classes/CommentRepository.php';
-
-$comments = [];
-$databaseError = '';
-
-try {
-    $database = new Database();
-    $commentRepository = new CommentRepository($database->getConnection());
-    $comments = $commentRepository->getAll();
-} catch (PDOException $exception) {
-    $databaseError = 'Nepodarilo sa pripojiť k databáze. Skontroluj XAMPP MySQL, databázu semprojekt a db/config.php.';
-}
-?>
 <!DOCTYPE html>
-<html lang="sk">
+<html>
 
 <?php
-$file_path = 'Header a footer/header.php';
-if (!include($file_path)) {
-    echo 'Failed to include ' . htmlspecialchars($file_path);
+$file_path = "Header a footer/header.php";
+if (!include($file_path) ) {
+    echo "Failed to include $file_path";
 }
 ?>
+<?php require "parts/header.php"; ?>
 
-<body>
 
-    <div class="cd-bg-video-wrapper" data-video="video/bangkok-city">
-        <!-- video element will be loaded using jQuery -->
-    </div>
+    <body>
 
-    <!-- Content -->
-    <div class="cd-hero">
+        <div class="cd-bg-video-wrapper" data-video="video/bangkok-city">
+            <!-- video element will be loaded using jQuery -->
+        </div> <!-- .cd-bg-video-wrapper -->
+        
+        <!-- Content -->
+        <div class="cd-hero">
 
-        <!-- Navigation -->
+             <!-- Navigation -->
         <div class="cd-slider-nav">
             <div class="container">
                 <nav class="navbar">
@@ -104,7 +88,7 @@ if (!include($file_path)) {
 
         <ul class="cd-hero-slider">
 
-            <!-- Page 1 Home -->
+               <!-- Page 1 Home -->
             <li class="selected">
                 <div class="cd-full-width">
                     <div class="container js-tm-page-content tm-page-1 tm-section-margin-t-small" data-page-no="1">
@@ -121,11 +105,11 @@ if (!include($file_path)) {
                                         <div class="tm-home-description-container tm-bg-dark-blue">
                                             <div class="text-xs-left tm-textbox">
                                                 <p class="tm-text tm-home-description">
-                                                    Text
+                                                    Text1
                                                 </p>
 
                                                 <p class="tm-text tm-home-description">
-                                                    Text
+                                                    Text2
                                                     <strong>ADMIN</strong>.
                                                 </p>
 
@@ -150,97 +134,101 @@ if (!include($file_path)) {
                     </div>
                 </div>
             </li>
-
-            <!-- Page 2 Questions / CRUD -->
-            <li>
-                <div class="cd-full-width">
-                    <div class="container js-tm-page-content tm-section-margin-t" data-page-no="2">
-                        <div class="row tm-margin-b">
-                            <div class="col-xs-12">
-                                <div class="tm-bg-white tm-textbox-padding">
-                                    <h2 class="tm-text-title tm-margin-b-0">Otázky a odpovede</h2>
-                                </div>
-                            </div>
-                        </div>
-
-                        <?php if ($databaseError !== ''): ?>
+                
+                <!-- Page 2 About -->
+                <li>
+                    <div class="cd-full-width">
+                        <div class="container js-tm-page-content tm-section-margin-t" data-page-no="2">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <div class="tm-bg-dark-blue tm-white-border tm-textbox-padding">
-                                        <p class="tm-text"><?= htmlspecialchars($databaseError) ?></p>
+                                    <div class="tm-flex">
+                                        <div class="col-lg-6 tm-white-header-container-outer tm-margin-b tm-2-col-left">
+                                            <div class="tm-bg-white tm-white-header-container">
+                                                <h2 class="tm-text-title tm-text-title-small">Donec dictum aliquam</h2>
+                                            </div>
+                                            <div class="tm-bg-dark-blue text-xs-left tm-textbox tm-textbox-padding tm-white-header-body tm-white-border tm-2-col-equal-height">
+                                                <p class="tm-text">Nulla scelerisque vitae augue non viverra. Mauris nibh eros, gravida id rutrum eu, placerat quis enim. Ut massa mi, convallis eget pharetra eget, laoreet sit amet orci. Sed tincidunt nisi ut lectus pellentesque viverra. Aliquam condimentum lacinia.</p>                                            
+                                            </div>    
+                                        </div>
+                                        <div class="col-lg-6 tm-white-header-container-outer tm-margin-b tm-2-col-right">
+                                            <div class="tm-bg-white tm-white-header-container">
+                                                <h2 class="tm-text-title tm-text-title-small">Vivamus quis lacinia</h2>
+                                            </div>
+                                            <div class="tm-bg-dark-blue text-xs-left tm-textbox tm-textbox-padding tm-white-header-body tm-white-border tm-2-col-equal-height">
+                                                <p class="tm-text">Integer posuere massa ipsum, ac pharetra metus dapibus vel. Duis aliquet ac lacus quis efficitur. Morbi in vulputate sapien. Sed nec mi fringilla metus vehicula porttitor. Donec sit amet arcu quis massa mollis condimentum tempor eleifend enim.</p>                                            
+                                            </div>    
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        <?php endif; ?>
-
-                        <?php if (isLoggedIn()): ?>
-                            <div class="row tm-margin-b">
-                                <div class="col-xs-12">
-                                    <a href="comment_create.php" class="btn btn-success">Pridať novú otázku</a>
-                                </div>
-                            </div>
-                        <?php else: ?>
-                            <div class="row tm-margin-b">
-                                <div class="col-xs-12">
-                                    <div class="tm-bg-dark-blue tm-white-border tm-textbox-padding">
-                                        <p class="tm-text">
-                                            Pre pridanie otázky sa najprv prihlás alebo zaregistruj.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php if (empty($comments) && $databaseError === ''): ?>
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <div class="tm-bg-dark-blue tm-white-border tm-textbox-padding">
-                                        <p class="tm-text">Zatiaľ neexistuje žiadna otázka.</p>
+                                    <div class="tm-flex">
+                                        <div class="col-lg-6 tm-margin-b tm-2-col-left">
+                                            <div class="tm-bg-white tm-textbox-padding tm-height-100">
+                                                <h2 class="tm-text-title tm-text-title-small tm-header-margin-b">Proin fringilla felis quam</h2>
+                                                <p class="tm-text">Ut massa mi, convallis eget pharetra eget, laoreet sit amet orci. Sed tincidunt nisi ut lectus pellentesque viverra. Aliquam condimentum lacinia.</p>    
+                                            </div>                                            
+                                        </div>
+                                        <div class="col-lg-6 tm-margin-b tm-2-col-right">
+                                            <div class="tm-bg-white tm-textbox-padding tm-height-100">
+                                                <h2 class="tm-text-title tm-text-title-small tm-header-margin-b">Sed rhoncus egestas</h2>
+                                                <p class="tm-text">Pellentesque augue urna, ultrices sit amet luctus eget, ultricies sit amet ipsum. Nulla sem nisi, commodo sed auctor sed, euismod nec dui.</p>
+                                            </div>
+                                        </div>  
                                     </div>
-                                </div>
+                                </div>                                
                             </div>
-                        <?php endif; ?>
 
-                        <?php foreach ($comments as $comment): ?>
-                            <div class="row tm-margin-b">
+                            <div class="row">
                                 <div class="col-xs-12">
-                                    <div class="tm-bg-dark-blue tm-white-border tm-textbox-padding">
-                                        <h3 class="tm-text-title tm-text-title-small">
-                                            <?= htmlspecialchars($comment['question']) ?>
-                                        </h3>
-
-                                        <p class="tm-text">
-                                            <strong>Odpoveď:</strong>
-                                            <?= nl2br(htmlspecialchars($comment['answer'])) ?>
-                                        </p>
-
-                                        <p class="tm-text">
-                                            Autor: <?= htmlspecialchars($comment['username']) ?>
-                                            | Vytvorené: <?= htmlspecialchars($comment['created_at']) ?>
-                                        </p>
-
-                                        <?php if (canEditComment($comment)): ?>
-                                            <a href="comment_edit.php?id=<?= (int) $comment['id'] ?>" class="btn btn-primary">
-                                                Upraviť
-                                            </a>
-
-                                            <a
-                                                href="comment_delete.php?id=<?= (int) $comment['id'] ?>"
-                                                class="btn btn-danger"
-                                                onclick="return confirm('Naozaj chceš vymazať tento záznam?');"
-                                            >
-                                                Vymazať
-                                            </a>
-                                        <?php endif; ?>
+                                    <div class="tm-flex">
+                                        <div class="col-lg-4 tm-margin-b">
+                                            <div class="tm-bg-brown tm-white-border tm-textbox-padding tm-height-100">                                
+                                                <p class="tm-text">Aliquam facilisis ut purus non ultricies. Mauris a auctor turpis. Ut in consequat quam. Integer ex dui, eleifend non mi val, eleifend varius orci.</p>
+                                            </div>    
+                                        </div>
+                                        <div class="col-lg-4 tm-margin-b">
+                                            <div class="tm-bg-dark-blue tm-white-border tm-textbox-padding tm-height-100">
+                                                <p class="tm-text">Mauris tempor, massa quis viverra suscipit, sapien ipsum condimentum nulla, sed faucibus tellus libero eget dolor. In ornare posuere.</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 tm-margin-b">
+                                            <div class="tm-bg-dark-brown tm-white-border tm-textbox-padding tm-height-100">
+                                                <p class="tm-text">Donec placerat eget enim vel fringilla. Vivamus nibh nisl, viverra vel nisl eget, feugiat fringilla quam. Naecenas sodales, magna sed.</p>
+                                            </div>
+                                        </div>                                        
                                     </div>
-                                </div>
+                                </div>                                
                             </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </li>
 
-            <!-- Page 3 Gallery -->
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="tm-flex">
+                                        <div class="col-lg-4 tm-sm-margin-b">
+                                            <div class="tm-bg-dark-blue tm-white-border tm-textbox-padding tm-height-100">
+                                                <p class="tm-text">Quisque mattis pellentesque. Etiam rutrum neque at diam imperdiet, efficitur tincidunt turpis dignissim. Cras placerat placerat tempor.</p>
+                                            </div>    
+                                        </div>
+                                        <div class="col-lg-4 tm-sm-margin-b">
+                                            <div class="tm-bg-white tm-white-border tm-textbox-padding tm-height-100">
+                                                <p class="tm-text">Sed nec mi fringilla metus vehicula porttitor. Donec sit amet arcu quis massa mollis condimentum tempor eleifend enim.</p>
+                                            </div>    
+                                        </div>
+                                        <div class="col-lg-4 tm-sm-margin-b">
+                                            <div class="tm-bg-dark-blue tm-white-border tm-textbox-padding tm-height-100">
+                                                <p class="tm-text">In pellentesque, ipsum vitae dapibus ultrices, dui nunc fringilla enim, sit amet placerat nulla felis et nisl.</p>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>                                                
+                    </div> <!-- .cd-full-width -->
+
+                </li>
+               
+                <!-- Page 3 Gallery -->
             <li>
                 <div class="cd-full-width">
                     <div class="container js-tm-page-content tm-section-margin-t" data-page-no="3">
@@ -298,8 +286,8 @@ if (!include($file_path)) {
                     </div>
                 </div>
             </li>
-
-            <!-- Page 4 Contact -->
+                
+                <!-- Page 4 Contact -->
             <li>
                 <div class="cd-full-width">
                     <div class="container js-tm-page-content tm-section-margin-t-small" data-page-no="4">
@@ -317,10 +305,10 @@ if (!include($file_path)) {
                                     <div class="tm-flex tm-contact-container tm-bg-dark-blue">
                                         <div class="text-xs-left tm-textbox tm-2-col-textbox-2 tm-textbox-padding tm-textbox-padding-contact">
                                             <p class="tm-text">
-                                                Semestrálny projekt pre predmet Skriptovacie jazyky.
+                                               Text
                                             </p>
                                             <p class="tm-text">
-                                                Technológie: PHP 8+, MySQL/MariaDB, OOP, PDO, HTML, CSS, JS.
+                                               Text
                                             </p>
                                         </div>
 
@@ -349,120 +337,140 @@ if (!include($file_path)) {
                 </div>
             </li>
         </ul>
-
-        <?php
-        $file_path = 'Header a footer/footer.php';
-        if (!include($file_path)) {
-            echo 'Failed to include ' . htmlspecialchars($file_path);
-        }
-        ?>
-
-    </div>
-
-    <!-- Preloader -->
-    <div id="loader-wrapper">
-        <div id="loader"></div>
-        <div class="loader-section section-left"></div>
-        <div class="loader-section section-right"></div>
-    </div>
-
-    <!-- load JS files -->
-    <script src="js/jquery-1.11.3.min.js"></script>
-    <script src="js/tether.min.js"></script>
-    <script src="js/isInViewport.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/hero-slider-main.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-
-    <script>
-        function adjustHeightOfPage(pageNo) {
-            var offset = 80;
-            var pageContentHeight = $(".cd-hero-slider li:nth-of-type(" + pageNo + ") .js-tm-page-content").height();
-
-            if ($(window).width() >= 992) {
-                offset = 120;
-            } else if ($(window).width() < 480) {
-                offset = 40;
+            <?php
+            $file_path = "Header a footer/footer.php";
+            if (!include($file_path) ) {
+                echo "Failed to include $file_path";
             }
+            ?>
 
-            var totalPageHeight = 335 + $('.cd-slider-nav').height()
-                + pageContentHeight + offset + $('.tm-footer').height();
+        </div> <!-- .cd-hero -->        
 
-            if (totalPageHeight > $(window).height()) {
-                $('.cd-hero-slider').addClass('small-screen');
-                $('.cd-hero-slider li:nth-of-type(' + pageNo + ')').css("min-height", totalPageHeight + "px");
-            } else {
-                $('.cd-hero-slider').removeClass('small-screen');
-                $('.cd-hero-slider li:nth-of-type(' + pageNo + ')').css("min-height", "100%");
-            }
-        }
+        <!-- Preloader, https://ihatetomatoes.net/create-custom-preloading-screen/ -->
+        <div id="loader-wrapper">            
+            <div id="loader"></div>
+            <div class="loader-section section-left"></div>
+            <div class="loader-section section-right"></div>
+        </div>
+        
+        <!-- load JS files -->
+        <script src="js/jquery-1.11.3.min.js"></script>         <!-- jQuery (https://jquery.com/download/) -->
+        <script src="js/tether.min.js"></script>                <!-- http://tether.io/ -->
+        <script src="js/isInViewport.min.js"></script>          <!-- isInViewport js (https://github.com/zeusdeux/isInViewport) -->
+        <script src="js/bootstrap.min.js"></script>             <!-- Bootstrap js (v4-alpha.getbootstrap.com/) -->
+        <script src="js/hero-slider-main.js"></script>          <!-- Hero slider (https://codyhouse.co/gem/hero-slider/) -->
+        <script src="js/jquery.magnific-popup.min.js"></script> <!-- Magnific popup (http://dimsemenov.com/plugins/magnific-popup/) -->
+        
+        <script>
 
-        function uploadVideo() {
-            var videoWrapper = $('.cd-bg-video-wrapper');
+            function adjustHeightOfPage(pageNo) {
 
-            if (videoWrapper.is(':visible')) {
-                var videoUrl = videoWrapper.data('video');
-                var video = $('<video autoplay loop><source src="' + videoUrl + '.mp4" type="video/mp4" /></video>');
-                video.appendTo(videoWrapper);
+                var offset = 80;
+                var pageContentHeight = $(".cd-hero-slider li:nth-of-type(" + pageNo + ") .js-tm-page-content").height();
 
-                if (videoWrapper.parent('.cd-bg-video.selected').length > 0) {
-                    video.get(0).play();
+                if($(window).width() >= 992) { offset = 120; }
+                else if($(window).width() < 480) { offset = 40; }
+               
+                // Get the page height
+                var totalPageHeight = 335 + $('.cd-slider-nav').height()
+                                        + pageContentHeight + offset
+                                        + $('.tm-footer').height();
+
+                // Adjust layout based on page height and window height
+                if(totalPageHeight > $(window).height()) 
+                {
+                    $('.cd-hero-slider').addClass('small-screen');
+                    $('.cd-hero-slider li:nth-of-type(' + pageNo + ')').css("min-height", totalPageHeight + "px");
+                }
+                else 
+                {
+                    $('.cd-hero-slider').removeClass('small-screen');
+                    $('.cd-hero-slider li:nth-of-type(' + pageNo + ')').css("min-height", "100%");
                 }
             }
-        }
 
-        $(window).load(function () {
-            adjustHeightOfPage(1);
+            function uploadVideo() {
 
-            if ($(window).width() > 800) {
-                uploadVideo();
+                var videoWrapper = $('.cd-bg-video-wrapper');
+                if( videoWrapper.is(':visible') ) {
+                    // if visible - we are not on a mobile device 
+                    var videoUrl = videoWrapper.data('video'),
+                        
+                    video = $('<video autoplay loop><source src="'+videoUrl+'.mp4" type="video/mp4" /></video>');
+                    video.appendTo(videoWrapper);
+
+                    // play video if first slide
+                    if(videoWrapper.parent('.cd-bg-video.selected').length > 0) video.get(0).play();                 
+                }
             }
 
-            $('.gallery-first').magnificPopup({
-                delegate: 'a',
-                type: 'image',
-                gallery: {enabled: true}
-            });
+            // Everything is loaded including images.            
+            $(window).load(function(){
 
-            $('.gallery-second').magnificPopup({
-                delegate: 'a',
-                type: 'image',
-                gallery: {enabled: true}
-            });
+                adjustHeightOfPage(1); // Adjust page height
 
-            $('#tmNavbar a').click(function () {
-                $('#tmNavbar').collapse('hide');
-
-                var pageNo = $(this).data("no");
-
-                if (pageNo) {
-                    adjustHeightOfPage(pageNo);
-                }
-            });
-
-            $(window).resize(function () {
-                var currentPageNo = $(".cd-hero-slider li.selected .js-tm-page-content").data("page-no");
-
-                setTimeout(function () {
-                    adjustHeightOfPage(currentPageNo);
-                }, 3000);
-
-                if ($(window).width() > 800) {
+                // Background Video
+                if($( window ).width() > 800) {
                     uploadVideo();
                 }
+
+                /* Gallery One pop up
+                -----------------------------------------*/
+                $('.gallery-first').magnificPopup({
+                    delegate: 'a', // child items selector, by clicking on it popup will open
+                    type: 'image',
+                    gallery:{enabled:true}                
+                });
+
+                /* Gallery Two pop up
+                -----------------------------------------*/
+                $('.gallery-second').magnificPopup({
+                    delegate: 'a', // child items selector, by clicking on it popup will open
+                    type: 'image',
+                    gallery:{enabled:true}                
+                });
+				
+                /* Collapse menu after click 
+                -----------------------------------------*/
+                $('#tmNavbar a').click(function(){
+                    $('#tmNavbar').collapse('hide');
+
+                    adjustHeightOfPage($(this).data("no")); // Adjust page height       
+                });
+
+                /* Browser resized 
+                -----------------------------------------*/
+                $( window ).resize(function() {
+                    var currentPageNo = $(".cd-hero-slider li.selected .js-tm-page-content").data("page-no");
+                    
+                    // wait 3 seconds
+                    setTimeout(function() {
+                        adjustHeightOfPage( currentPageNo );
+                    }, 3000);
+
+                    if($( window ).width() > 800) {
+                       uploadVideo();
+                    }
+                    
+                });
+
+                // Play video only when visible
+                // https://stackoverflow.com/questions/21163756/html5-and-javascript-to-play-videos-only-when-visible
+                $('video').each(function(){
+                    if ($(this).is(":in-viewport")) {
+                        $(this)[0].play();
+                    } else {
+                        $(this)[0].pause();
+                    }
+                })
+        
+                // Remove preloader (https://ihatetomatoes.net/create-custom-preloading-screen/)
+                $('body').addClass('loaded');
+                $('.tm-current-year').text(new Date().getFullYear());
+                           
             });
 
-            $('video').each(function () {
-                if ($(this).is(":in-viewport")) {
-                    $(this)[0].play();
-                } else {
-                    $(this)[0].pause();
-                }
-            });
+        </script>            
 
-            $('body').addClass('loaded');
-            $('.tm-current-year').text(new Date().getFullYear());
-        });
-    </script>
 </body>
 </html>
