@@ -23,26 +23,38 @@ jQuery(document).ready(function($){
 		});
 		
 		//change visible slide
+		// Important fix:
+		// The original template blocked every navigation click with event.preventDefault().
+		// That also blocked real links such as logout.php, login.php and register.php.
+		// Now the slider only handles links that have data-no="1", data-no="2", etc.
 		sliderNav.on('click', 'li', function(event){
-			event.preventDefault();
 			var selectedItem = $(this);
+			var selectedLink = selectedItem.find('a[data-no]').first();
+
+			if(selectedLink.length === 0) {
+				return true;
+			}
+
+			event.preventDefault();
+
+			var selectedPosition = parseInt(selectedLink.data('no'), 10) - 1;
+			var activePosition = slidesWrapper.find('li.selected').index();
+
+			if(selectedPosition < 0 || isNaN(selectedPosition)) {
+				return;
+			}
+
 			if(!selectedItem.hasClass('selected')) {
-				// if it's not already selected
-				var selectedPosition = selectedItem.index(),
-					activePosition = slidesWrapper.find('li.selected').index();
-				
 				if( activePosition < selectedPosition) {
 					nextSlide(slidesWrapper.find('.selected'), slidesWrapper, sliderNav, selectedPosition);
 				} else {
 					prevSlide(slidesWrapper.find('.selected'), slidesWrapper, sliderNav, selectedPosition);
 				}
 
-				//this is used for the autoplay
 				visibleSlidePosition = selectedPosition;
 
 				updateSliderNavigation(sliderNav, selectedPosition);
 				updateNavigationMarker(navigationMarker, selectedPosition+1);
-				//reset autoplay
 				setAutoplay(slidesWrapper, slidesNumber, autoPlayDelay);
 			}
 		});

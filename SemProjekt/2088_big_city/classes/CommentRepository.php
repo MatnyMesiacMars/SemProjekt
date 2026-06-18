@@ -44,7 +44,7 @@ class CommentRepository
         return $comment ?: null;
     }
 
-    public function create(int $userId, string $question, string $answer): void
+    public function create(int $userId, string $question, ?string $answer): void
     {
         $statement = $this->connection->prepare(
             'INSERT INTO comments (user_id, question, answer)
@@ -54,11 +54,11 @@ class CommentRepository
         $statement->execute([
             'user_id' => $userId,
             'question' => $question,
-            'answer' => $answer,
+            'answer' => $answer ?? '',
         ]);
     }
 
-    public function update(int $id, string $question, string $answer): void
+    public function update(int $id, string $question, ?string $answer): void
     {
         $statement = $this->connection->prepare(
             'UPDATE comments
@@ -71,7 +71,7 @@ class CommentRepository
         $statement->execute([
             'id' => $id,
             'question' => $question,
-            'answer' => $answer,
+            'answer' => $answer ?? '',
         ]);
     }
 

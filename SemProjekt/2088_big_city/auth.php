@@ -18,11 +18,15 @@ function requireLogin(): void
     }
 }
 
+function requireAdmin(): void
+{
+    if (!isAdmin()) {
+        header('Location: index.php');
+        exit;
+    }
+}
+
 function canEditComment(array $comment): bool
 {
-    if (!isLoggedIn()) {
-        return false;
-    }
-
-    return isAdmin() || (int) $comment['user_id'] === (int) $_SESSION['user_id'];
+    return isAdmin();
 }
