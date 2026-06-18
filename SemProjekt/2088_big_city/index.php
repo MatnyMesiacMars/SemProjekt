@@ -40,7 +40,7 @@ if (!include($file_path)) {
             <div class="container">
                 <nav class="navbar">
                     <div class="tm-navbar-bg">
-                        <a class="navbar-brand text-uppercase" href="index.php">BlackMarket</a>
+                        <a class="navbar-brand text-uppercase" href="index.php">Black-Market</a>
 
                         <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#tmNavbar">
                             &#9776;
