@@ -114,19 +114,18 @@ if (!include($file_path)) {
                                     <div class="tm-home-container">
                                         <div class="tm-home-title-container">
                                             <h2 class="tm-text-title text-xs-center tm-home-title">
-                                                Vitaj v City Fóre
+                                                Vitaj v BlackMarket
                                             </h2>
                                         </div>
 
                                         <div class="tm-home-description-container tm-bg-dark-blue">
                                             <div class="text-xs-left tm-textbox">
                                                 <p class="tm-text tm-home-description">
-                                                   Text1
+                                                   Vitaj na našom fóre BlackMarket, kde môžeš klásť otázky ohľadom fantasy zbraní a dostávať odpovede od adminov.
                                                 </p>
 
                                                 <p class="tm-text tm-home-description">
-                                                    Bežný používateľ môže pridávať otázky. Upravovať a vymazávať otázky môže iba admin.
-                                                    Admin používa rovnaký login, ale po prihlásení vidí hore zelený nápis.
+                                                    Môžeš sa prihlásiť alebo zaregistrovať, aby si mohol pridávať otázky a odpovede.
                                                 </p>
 
                                                 <?php if (!isLoggedIn()): ?>
