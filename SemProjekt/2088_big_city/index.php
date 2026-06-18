@@ -40,7 +40,7 @@ if (!include($file_path)) {
             <div class="container">
                 <nav class="navbar">
                     <div class="tm-navbar-bg">
-                        <a class="navbar-brand text-uppercase" href="index.php">City Fórum</a>
+                        <a class="navbar-brand text-uppercase" href="index.php">BlackMarket</a>
 
                         <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#tmNavbar">
                             &#9776;
@@ -150,7 +150,7 @@ if (!include($file_path)) {
                 </div>
             </li>
 
-            <!-- Page 2 Questions / CRUD -->
+            <!-- Page 2 Questions  -->
             <li>
                 <div class="cd-full-width">
                     <div class="container js-tm-page-content tm-section-margin-t" data-page-no="2">
